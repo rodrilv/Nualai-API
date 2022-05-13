@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 let Schema = mongoose.Schema;
 
-let miembro = new Schema({
+let miembroSchema = new Schema({
   _id: {
     type: String,
     required: [true, "Ingrese un ID para usuario"],
@@ -13,70 +13,56 @@ let miembro = new Schema({
       type: String,
       required: [true, "Ingrese un Nombre para el miembro"],
     },
+    apellidos: {
+      type: String,
+      required: [true, "Ingrese los Apellidos para el miembro"],
+    },
     edad: {
       type: Number,
-      required: [true, "Ingrese la Edad para el miembro"],
     },
-    apellido_paterno: {
-      type: String,
-    },
-    apellido_materno: {
+    domicilio: {
       type: String,
     },
     telefono: {
       type: String,
       required: [true, "Ingrese un Telefono para el miembro"],
     },
-    direccion: {
+    correo: {
       type: String,
       required: [true, "Ingrese un Telefono para el miembro"],
     },
-  },
-  datosMedicos: {
-    presionArterial: {
-      sistolica: {
-        type: Number,
-      },
-      distolica: {
-        type: Number,
-      },
+    ocupacion: {
+      type: String,
+      required: [true, "Ingresa una ocupacion para el miembro"],
     },
-    glucosa: {
-      type: Number,
+    estado_civil: {
+      type: String,
+      required: [true, "Ingresa un estado civil para el miembro"],
     },
-    trigliceridos: {
-      type: Number,
-    },
-    colesterol: {
-      total: {
-        type: Number,
-      },
-      no_hdl: {
-        type: Number,
-      },
-      ldl: {
-        type: Number,
-      },
-      hdl: {
-        type: Number,
-      },
-    },
-    tiroides: {
-      tsh: {
-        type: Number,
-      },
-      t3: {
-        type: Number,
-      },
-      t4: {
-        type: Number,
-      },
+    actividad_fisica: {
+      type: String,
+      required: [true, "Ingresa actividad fisica para el miembro"],
     },
   },
+  datosNutricionales:{
+    peso:{
+      type: String
+    },
+    estatura:{
+      type: String
+    },
+    LDL:{
+      type: String
+    },
+    HDL:{
+      type: String
+    },
+
+  }
 });
 
-miembro.plugin(uniqueValidator, {
+miembroSchema.plugin(uniqueValidator, {
   message: "{PATH} Debe ser unico",
 });
 
-module.exports = mongoose.model("miembro", miembro);
+module.exports = mongoose.model('Miembro', miembroSchema);

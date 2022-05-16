@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 let Schema = mongoose.Schema;
 
@@ -19,6 +19,10 @@ let miembroSchema = new Schema({
     },
     edad: {
       type: Number,
+    },
+    genero: {
+      type: String,
+      required: [true, "Ingrese un genero para el miembro"],
     },
     domicilio: {
       type: String,
@@ -44,25 +48,37 @@ let miembroSchema = new Schema({
       required: [true, "Ingresa actividad fisica para el miembro"],
     },
   },
-  datosNutricionales:{
-    peso:{
-      type: String
+  datosNutricionales: {
+    peso: {
+      type: String,
     },
-    estatura:{
-      type: String
+    estatura: {
+      type: String,
     },
-    LDL:{
-      type: String
+    LDL: {
+      type: String,
     },
-    HDL:{
-      type: String
+    HDL: {
+      type: String,
     },
-
-  }
+  },
+  datosPago: {
+    semanas: [
+      {
+        _id: false,
+        semana: {
+          type: Number,
+        },
+        status: {
+          type: String,
+        },
+      },
+    ],
+  },
 });
 
 miembroSchema.plugin(uniqueValidator, {
   message: "{PATH} Debe ser unico",
 });
 
-module.exports = mongoose.model('Miembro', miembroSchema);
+module.exports = mongoose.model("Miembro", miembroSchema);

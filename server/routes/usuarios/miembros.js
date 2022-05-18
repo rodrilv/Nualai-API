@@ -122,7 +122,18 @@ app.post("/registrar", (req, res) => {
   });
 });
 
-app.put("/agregar-datos-medicos", (req, res) => {});
+app.put("/agregar-datos-medicos", (req, res) => {
+
+});
+app.put("/agregar-datos-nutricionales", (req, res) => {
+  
+});
+app.put("/agregar-datos-psicologicos", (req, res) => {
+  
+});
+app.put("/agregar-datos-fisioterapia", (req, res) => {
+  
+});
 
 app.patch("/pagar-mensualidades/:id", (req, res) => {
   let body = req.body;

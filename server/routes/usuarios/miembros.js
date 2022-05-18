@@ -1,5 +1,6 @@
 require("../../config/config");
 const express = require("express");
+const cors = require("cors");
 //const bcrypt = require('bcryptjs');
 //const jwt = require('jsonwebtoken');
 //const mongoose = require('mongoose');
@@ -8,7 +9,19 @@ const _ = require("underscore");
 const usuarios = require("../../models/usuarios");
 const Miembro = require("../../models/usuarios");
 const app = express();
+const nodemailer = require("nodemailer");
+const temp = require("../../models/mail-template");
 require("../../config/helmet")(app);
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  secure: true,
+  port: 465,  
+  auth: {
+    user: "rott.9954@gmail.com",
+    pass: "kggkpzhzngytmprx",
+  },
+});
 
 app.get("/", (req, res) => {
   return res.status(200).json({
@@ -34,6 +47,7 @@ app.get("/obtener-miembros", (req, res) => {
 });
 
 app.post("/registrar", (req, res) => {
+  let year = new Date().getFullYear();
   let i = "NM";
   let d = Math.random() * 999999;
   let id = i + parseInt(d);
@@ -52,65 +66,41 @@ app.post("/registrar", (req, res) => {
       actividad_fisica: req.body.miembro.datosGenerales.actividad_fisica,
     },
     datosPago: {
-      semanas: [
+      mensualidades: [
         {
-          semana: 1,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "1° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
         {
-          semana: 2,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "2° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
         {
-          semana: 3,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "3° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
         {
-          semana: 4,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "4° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
         {
-          semana: 5,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "5° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
         {
-          semana: 6,
-          status: "ADEUDO",
-        },
-        {
-          semana: 7,
-          status: "ADEUDO",
-        },
-        {
-          semana: 8,
-          status: "ADEUDO",
-        },
-        {
-          semana: 9,
-          status: "ADEUDO",
-        },
-        {
-          semana: 10,
-          status: "ADEUDO",
-        },
-        {
-          semana: 11,
-          status: "ADEUDO",
-        },
-        {
-          semana: 12,
-          status: "ADEUDO",
-        },
-        {
-          semana: 13,
-          status: "ADEUDO",
-        },
-        {
-          semana: 14,
-          status: "ADEUDO",
-        },
-        {
-          semana: 15,
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "6° Mes",
+          fecha: year,
           status: "ADEUDO",
         },
       ],
@@ -134,9 +124,66 @@ app.post("/registrar", (req, res) => {
 
 app.put("/agregar-datos-medicos", (req, res) => {});
 
-app.patch("/pagar-semanas", (req, res) => {
+app.patch("/pagar-mensualidades/:id", (req, res) => {
   let body = req.body;
+  let id = req.params.id;
+  let mensualidades = body.datosPago.mensualidades;
+
+  console.log(temp);
   console.log(body);
+  console.log(mensualidades[0]);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        [`datosPago.mensualidades.$[outer].status`]: mensualidades[0].status,
+        [`datosPago.mensualidades.$[outer].fecha`]: mensualidades[0].fecha,
+      },
+    },
+    {
+      arrayFilters: [{ "outer.mes": mensualidades[0].mes }],
+    },
+    (err, uDB) => {
+      if (err) {
+        res.status(400).json({
+          ok: false,
+        });
+      }
+      res.status(201).json({
+        ok: true,
+      });
+    }
+  );
+});
+app.post("/enviar-recibo", cors(), (req, res) => {
+  let body = req.body;
+  let mensualidades = body.datosPago.mensualidades;
+  let mailOptions = {
+    from: "rott.9954@gmail.com",
+    to: `${mensualidades[0].correo}`,
+    subject: "Recibo de Pago",
+    text: "Hola Mundo",
+    html: `${temp(
+      mensualidades[0].nombre,
+      mensualidades[0].mes,
+      mensualidades[0].folio,
+      mensualidades[0].fecha,
+      body.total
+    )}`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error){
+      res.status(400).json({
+        ok: false,
+        message: "I ran but i failed"
+      })
+    }else{
+      res.status(200).json({
+        ok: true,
+        info
+      })
+    }
+  });
 });
 
 app.delete("/eliminar-miembro/:id", (req, res) => {

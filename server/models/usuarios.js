@@ -62,19 +62,25 @@ let miembroSchema = new Schema({
       type: String,
     },
   },
-  datosPago: {
-    semanas: [
+  datosPago:{
+    mensualidades: [
       {
         _id: false,
-        semana: {
-          type: Number,
+        folio:{
+          type: String
+        },
+        mes:{
+          type: String
+        },
+        fecha:{
+          type: String
         },
         status: {
-          type: String,
-        },
-      },
-    ],
-  },
+          type: String
+        }
+      }
+    ]
+  }
 });
 
 miembroSchema.plugin(uniqueValidator, {

@@ -71,37 +71,37 @@ app.post("/registrar", (req, res) => {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "1° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
         {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "2° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
         {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "3° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
         {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "4° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
         {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "5° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
         {
           folio: `P0${parseInt(Math.random() * 999999)}`,
           mes: "6° Mes",
           fecha: year,
-          status: "ADEUDO",
+          status: "PENDIENTE",
         },
       ],
     },
@@ -179,6 +179,8 @@ app.post("/enviar-recibo", cors(), (req, res) => {
       mensualidades[0].mes,
       mensualidades[0].folio,
       mensualidades[0].fecha,
+      body.monto,
+      body.descuento,
       body.total
     )}`
   };

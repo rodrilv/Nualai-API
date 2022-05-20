@@ -1,4 +1,4 @@
-const temp = function returnHtml(nombre_miembro, motivo, folio, fecha, monto, ){
+const temp = function returnHtml(nombre_miembro, motivo, folio, fecha, monto, descuento, total ){
 
 const template = `<!doctype html>
 <html lang="en">
@@ -25,11 +25,14 @@ const template = `<!doctype html>
             </div>
             <div class="col-md-4"></div>
             </div>
-            <div class="row" style="margin-top: 100px;">
+            <div class="row" style="margin-top: 50px;">
                 <div class="col-md-4">
                     <span style="font-size: large;">Nombre del miembro: </span> <b>${nombre_miembro}</b><br>
                     <span style="font-size: large;">Motivo de Pago: </span><b>${motivo}</b><br>
-                    <span style="font-size: large;">Monto: </span><b>$ ${monto}.00 MXN</b>
+                    <span style="font-size: large;">Monto: </span><b>$ ${monto}.00 MXN</b><br>
+                    <span style="font-size: large;">Descuentos (en caso de aplicar): </span><b> - ${descuento}%</b><br>
+                    <span style="font-size: large;">TOTAL: </span><b>$ ${total}.00 MXN</b>
+
                 </div>
                 <div class="col-md-4">
                 </div>

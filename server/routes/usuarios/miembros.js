@@ -46,6 +46,27 @@ app.get("/obtener-miembros", (req, res) => {
   });
 });
 
+app.get("/obtener-miembro/:id", (req, res) => {
+  let id = req.params.id
+  console.log(id);
+  Miembro.findById(id).exec( (err, member) =>{
+    if(err){
+      console.log(err, "Hola soy error");
+      res.status(400).json({
+        ok: false,
+        err
+      });
+    }else{
+      console.log(member, "Hola sí entré pero no encontré nada");
+      res.status(200).json({
+        ok: true,
+        member
+      });
+    }
+    
+  } )
+});
+
 app.post("/registrar", (req, res) => {
   let year = new Date().getFullYear();
   let i = "NM";
@@ -64,6 +85,7 @@ app.post("/registrar", (req, res) => {
       ocupacion: req.body.miembro.datosGenerales.ocupacion,
       estado_civil: req.body.miembro.datosGenerales.estado_civil,
       actividad_fisica: req.body.miembro.datosGenerales.actividad_fisica,
+      grado_de_estudio: req.body.miembro.datosGenerales.grado_de_estudio
     },
     datosPago: {
       mensualidades: [
@@ -169,20 +191,21 @@ app.patch("/pagar-mensualidades/:id", (req, res) => {
 app.post("/enviar-recibo", cors(), (req, res) => {
   let body = req.body;
   let mensualidades = body.datosPago.mensualidades;
+  let props = {
+    nombre: mensualidades[0].nombre,
+    motivo: mensualidades[0].mes,
+    folio: mensualidades[0].folio,
+    fecha: mensualidades[0].fecha,
+    monto: body.monto,
+    descuento: body.descuento,
+    total: body.total
+  }
   let mailOptions = {
     from: "rott.9954@gmail.com",
     to: `${mensualidades[0].correo}`,
     subject: "Recibo de Pago",
     text: "Hola Mundo",
-    html: `${temp(
-      mensualidades[0].nombre,
-      mensualidades[0].mes,
-      mensualidades[0].folio,
-      mensualidades[0].fecha,
-      body.monto,
-      body.descuento,
-      body.total
-    )}`
+    html: `${temp(props)}`
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if(error){

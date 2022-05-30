@@ -19,6 +19,7 @@ let personalSchema = new Schema({
       },
       edad: {
         type: Number,
+        required: [true, "Ingrese la edad para el miembro"],
       },
       genero: {
         type: String,
@@ -26,6 +27,7 @@ let personalSchema = new Schema({
       },
       domicilio: {
         type: String,
+        required: [true, "Ingrese un domicilio para el miembro"],
       },
       telefono: {
         type: String,
@@ -33,11 +35,15 @@ let personalSchema = new Schema({
       },
       correo: {
         type: String,
-        required: [true, "Ingrese un Telefono para el miembro"],
+        required: [true, "Ingrese un correo para el miembro"],
       },
-      escolaridad: {
+      rol: {
         type: String,
-        required: [true, "Ingresa una ocupacion para el miembro"],
+        required: [true, "Ingresa un rol para el miembro"],
+      },
+      estado_civil: {
+        type: String,
+        required: [true, "Ingresa un estado civil para el miembro"],
       },
   }
 });

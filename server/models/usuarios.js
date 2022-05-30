@@ -47,8 +47,70 @@ let miembroSchema = new Schema({
       type: String,
       required: [true, "Ingresa actividad fisica para el miembro"],
     },
+    grado_de_estudio:{
+      type: String,
+      required: [true, "Ingresa el grado de estudios para el miembro"],
+    }
   },
+ //datosMedicos
+ //datosPsicologicos
+ //datosFisioterapeuticos
   datosNutricionales: {
+    tratamiento_dietetico:{
+      respuesta: {
+        type: String
+      },
+      hace_cuanto:{
+        type: String
+      }
+    },
+    apetito:{
+      type: String
+    },
+    funcionamiento_intestinal:{
+      type: String
+    },
+    sintomas_gastrointestinales: {
+      respuesta: {
+        type: String
+      },
+      tipo: {
+        type: String
+      },
+      hace_cuanto:{
+        type: String
+      }
+    },
+    tabaquismo:{
+      respuesta:{
+        type: String
+      },
+      hace_cuanto: {
+        type: String
+      },
+      cuanto:{
+        type: String
+      }
+    },
+    alcoholismo:{
+      respuesta:{
+        type: String
+      },
+      hace_cuanto: {
+        type: String
+      },
+      cuanto:{
+        type: String
+      }
+    },
+    H2O:{
+      cantidad:{
+        type: String
+      }
+    },
+    prefiere_no_consumir:{
+      type: String,
+    },
     peso: {
       type: String,
     },
@@ -61,6 +123,21 @@ let miembroSchema = new Schema({
     HDL: {
       type: String,
     },
+    IMC: {
+      type: String
+    },
+    nivel_agua_corporal:{
+      type: String
+    },
+    IMM: {
+      type: String
+    },
+    edad_biologica: {
+      type: String
+    },
+    peso_masa_osea:{
+      type: String
+    }
   },
   datosPago:{
     mensualidades: [

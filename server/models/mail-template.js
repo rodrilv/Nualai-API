@@ -1,4 +1,4 @@
-const temp = function returnHtml(nombre_miembro, motivo, folio, fecha, monto, descuento, total ){
+const temp = function returnHtml(props){
 
 const template = `<!doctype html>
 <html lang="en">
@@ -27,18 +27,18 @@ const template = `<!doctype html>
             </div>
             <div class="row" style="margin-top: 50px;">
                 <div class="col-md-4">
-                    <span style="font-size: large;">Nombre del miembro: </span> <b>${nombre_miembro}</b><br>
-                    <span style="font-size: large;">Motivo de Pago: </span><b>${motivo}</b><br>
-                    <span style="font-size: large;">Monto: </span><b>$ ${monto}.00 MXN</b><br>
-                    <span style="font-size: large;">Descuentos (en caso de aplicar): </span><b> - ${descuento}%</b><br>
-                    <span style="font-size: large;">TOTAL: </span><b>$ ${total}.00 MXN</b>
+                    <span style="font-size: large;">Nombre del miembro: </span> <b>${props.nombre}</b><br>
+                    <span style="font-size: large;">Motivo de Pago: </span><b>${props.motivo}</b><br>
+                    <span style="font-size: large;">Monto: </span><b>$ ${props.monto}.00 MXN</b><br>
+                    <span style="font-size: large;">Descuentos (en caso de aplicar): </span><b> - ${props.descuento}%</b><br>
+                    <span style="font-size: large;">TOTAL: </span><b>$ ${props.total}.00 MXN</b>
 
                 </div>
                 <div class="col-md-4">
                 </div>
                 <div class="col-md-4">
-                Fecha: <b>${fecha}</b><br>
-                Folio: <b>${folio}</b>
+                Fecha: <b>${props.fecha}</b><br>
+                Folio: <b>${props.folio}</b>
             </div>
             </div>
             <div class="row">

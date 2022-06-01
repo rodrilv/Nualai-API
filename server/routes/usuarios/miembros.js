@@ -49,7 +49,7 @@ app.get("/obtener-miembros", (req, res) => {
 app.get("/obtener-miembro/:id", (req, res) => {
   let id = req.params.id
   console.log(id);
-  Miembro.findById(id).exec( (err, member) =>{
+  Miembro.findOne({id: id}, {datosGenerales: 1}).exec( (err, member) =>{
     if(err){
       console.log(err, "Hola soy error");
       res.status(400).json({
@@ -66,6 +66,7 @@ app.get("/obtener-miembro/:id", (req, res) => {
     
   } )
 });
+
 
 app.post("/registrar", (req, res) => {
   let year = new Date().getFullYear();

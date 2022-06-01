@@ -20,19 +20,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/obtener-personal", (req, res) => {
-  Personal.find().exec((err, personal) =>{
-    if(err){
+  Personal.find().exec((err, personal) => {
+    if (err) {
       return res.status(401).json({
         ok: false,
-        err
-      })
-    }else{
+        err,
+      });
+    } else {
       return res.status(200).json({
         ok: true,
-        personal
-      })
+        personal,
+      });
     }
-  })
+  });
 });
 
 app.post("/registrar-personal", (req, res) => {
@@ -84,5 +84,23 @@ app.delete("/eliminar-personal/:id", (req, res) => {
       });
     }
   });
+});
+app.get("/obtener-personal-rol/:rol", (req, res) => {
+  let rol = req.params.rol;
+  personal
+    .find({ "datosGenerales.rol": `${rol}` }, { datosGenerales: 1 })
+    .exec((err, personal) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          personal,
+        });
+      }
+    });
 });
 module.exports = app;

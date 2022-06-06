@@ -14,9 +14,9 @@ const temp = require("../../models/mail-template");
 require("../../config/helmet")(app);
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   secure: true,
-  port: 465,  
+  port: 465,
   auth: {
     user: "rott.9954@gmail.com",
     pass: "kggkpzhzngytmprx",
@@ -47,35 +47,36 @@ app.get("/obtener-miembros", (req, res) => {
 });
 
 app.get("/obtener-miembro/:id", (req, res) => {
-  let id = req.params.id
+  let id = req.params.id;
   console.log(id);
-  Miembro.findOne({id: id}, {datosGenerales: 1}).exec( (err, member) =>{
-    if(err){
+  Miembro.findOne({ _id: id }, { datosPago: 0, datosEntrevista: 0 }).exec((err, member) => {
+    if (err) {
       console.log(err, "Hola soy error");
       res.status(400).json({
         ok: false,
-        err
+        err,
       });
-    }else{
+    } else {
       console.log(member, "Hola sí entré pero no encontré nada");
       res.status(200).json({
         ok: true,
-        member
+        member,
       });
     }
-    
-  } )
+  });
 });
 
-
 app.post("/registrar", (req, res) => {
+  let body = req.body.miembro.datosGenerales;
+  console.log(body);
   let year = new Date().getFullYear();
   let i = "NM";
   let d = Math.random() * 999999;
   let id = i + parseInt(d);
   let miembro = new Miembro({
     _id: id,
-    datosGenerales: {
+    datosGenerales: body,
+    /*datosGenerales: {
       nombres: req.body.miembro.datosGenerales.nombres,
       apellidos: req.body.miembro.datosGenerales.apellidos,
       edad: req.body.miembro.datosGenerales.edad,
@@ -87,6 +88,12 @@ app.post("/registrar", (req, res) => {
       estado_civil: req.body.miembro.datosGenerales.estado_civil,
       actividad_fisica: req.body.miembro.datosGenerales.actividad_fisica,
       grado_de_estudio: req.body.miembro.datosGenerales.grado_de_estudio
+    },*/
+    datosEntrevista: {
+      medica: "no",
+      nutricional: "no",
+      fisioterapia: "no",
+      psicologica: "no",
     },
     datosPago: {
       mensualidades: [
@@ -145,18 +152,68 @@ app.post("/registrar", (req, res) => {
   });
 });
 
-app.put("/agregar-datos-medicos", (req, res) => {
-
+app.put("/agregar-datos-medicos/:id", (req, res) => {
+  let body = req.body.datosMedicos;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.medica": "si",
+        datosMedicos: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
 });
 app.put("/agregar-datos-nutricionales", (req, res) => {
-  
+  let body = req.body.datosMedicos;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.medica": "si",
+        datosMedicos: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
 });
-app.put("/agregar-datos-psicologicos", (req, res) => {
-  
-});
-app.put("/agregar-datos-fisioterapia", (req, res) => {
-  
-});
+app.put("/agregar-datos-psicologicos", (req, res) => {});
+app.put("/agregar-datos-fisioterapia", (req, res) => {});
 
 app.patch("/pagar-mensualidades/:id", (req, res) => {
   let body = req.body;
@@ -199,26 +256,26 @@ app.post("/enviar-recibo", cors(), (req, res) => {
     fecha: mensualidades[0].fecha,
     monto: body.monto,
     descuento: body.descuento,
-    total: body.total
-  }
+    total: body.total,
+  };
   let mailOptions = {
     from: "rott.9954@gmail.com",
     to: `${mensualidades[0].correo}`,
     subject: "Recibo de Pago",
     text: "Hola Mundo",
-    html: `${temp(props)}`
+    html: `${temp(props)}`,
   };
   transporter.sendMail(mailOptions, (error, info) => {
-    if(error){
+    if (error) {
       res.status(400).json({
         ok: false,
-        message: "I ran but i failed"
-      })
-    }else{
+        message: "I ran but i failed",
+      });
+    } else {
       res.status(200).json({
         ok: true,
-        info
-      })
+        info,
+      });
     }
   });
 });

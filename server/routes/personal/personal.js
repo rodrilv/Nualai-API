@@ -88,7 +88,7 @@ app.delete("/eliminar-personal/:id", (req, res) => {
 app.get("/obtener-personal-rol/:rol", (req, res) => {
   let rol = req.params.rol;
   personal
-    .find({ "datosGenerales.rol": `${rol}` }, { datosGenerales: 1 })
+    .find({ "datosGenerales.rol": rol }, { datosGenerales: 1 })
     .exec((err, personal) => {
       if (err) {
         return res.status(400).json({

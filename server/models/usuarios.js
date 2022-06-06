@@ -19,6 +19,10 @@ let miembroSchema = new Schema({
     },
     edad: {
       type: Number,
+      required: [true, "Ingrese la edad para el miembro"]
+    },
+    fecha_de_nacimiento:{
+      type: String
     },
     genero: {
       type: String,
@@ -26,6 +30,15 @@ let miembroSchema = new Schema({
     },
     domicilio: {
       type: String,
+      required: [true, "Ingrese un domicilio para el miembro"],
+    },
+    lugar_de_nacimiento: {
+      type: String,
+      required: [true, "Ingrese un Lugar de nacimiento para el miembro"],
+    },
+    pasatiempos: {
+      type: String,
+      required: [true, "Ingrese un Lugar de nacimiento para el miembro"],
     },
     telefono: {
       type: String,
@@ -47,68 +60,177 @@ let miembroSchema = new Schema({
       type: String,
       required: [true, "Ingresa actividad fisica para el miembro"],
     },
-    grado_de_estudio:{
+    lateralidad_manual:{
+      type: String,
+      required: [true, "Ingrese su lateralidad manual"]
+    },
+    grado_de_estudio: {
       type: String,
       required: [true, "Ingresa el grado de estudios para el miembro"],
-    }
+    },
   },
- //datosMedicos
- //datosPsicologicos
- //datosFisioterapeuticos
-  datosNutricionales: {
-    tratamiento_dietetico:{
-      respuesta: {
-        type: String
+  datosEntrevista: {
+    medica: {
+      type: String,
+    },
+    nutricional: {
+      type: String,
+    },
+    fisioterapia: {
+      type: String,
+    },
+    psicologica: {
+      type: String,
+    },
+  },
+  datosMedicos: {
+    atendio: {
+      type: String,
+    },
+    antecedentes_clinicos: {
+      alergias: {
+        respuesta: {
+          type: String,
+        },
+        tipos: {
+          type: String,
+        },
       },
-      hace_cuanto:{
-        type: String
-      }
+      medicamento_regular: {
+        respuesta: {
+          type: String,
+        },
+        motivo: {
+          type: String,
+        },
+      },
+      enfermedades_infancia: {
+        enfermedades: {
+          type: String,
+        },
+      },
+      intervenciones_quirurgicas: {
+        respuesta: {
+          type: String,
+        },
+        motivo: {
+          type: String,
+        },
+      },
+      hospitalizado: {
+        respuesta: {
+          type: String,
+        },
+        motivo: {
+          type: String,
+        },
+      },
+      vacuna_covid19: {
+        respuesta: {
+          type: String,
+        },
+      },
     },
-    apetito:{
-      type: String
+    presion_arterial: {
+      sistolica: {
+        type: Number,
+      },
+      distolica: {
+        type: Number,
+      },
     },
-    funcionamiento_intestinal:{
-      type: String
+    insulina: {
+      type: Number,
+    },
+    glucosa: {
+      type: Number,
+    },
+    trigliceridos: {
+      type: Number,
+    },
+    colesterol: {
+      total: {
+        type: String,
+      },
+      no_hdl: {
+        type: String,
+      },
+      hdl: {
+        type: String,
+      },
+      ldl: {
+        type: String,
+      },
+    },
+    tsh: {
+      type: String,
+    },
+    t3: {
+      type: String,
+    },
+    t4: {
+      type: String,
+    },
+  },
+  //datosPsicologicos
+  //datosFisioterapeuticos
+  datosNutricionales: {
+    atendio: {
+      type: String,
+    },
+    tratamiento_dietetico: {
+      respuesta: {
+        type: String,
+      },
+      hace_cuanto: {
+        type: String,
+      },
+    },
+    apetito: {
+      type: String,
+    },
+    funcionamiento_intestinal: {
+      type: String,
     },
     sintomas_gastrointestinales: {
       respuesta: {
-        type: String
+        type: String,
       },
       tipo: {
-        type: String
-      },
-      hace_cuanto:{
-        type: String
-      }
-    },
-    tabaquismo:{
-      respuesta:{
-        type: String
+        type: String,
       },
       hace_cuanto: {
-        type: String
+        type: String,
       },
-      cuanto:{
-        type: String
-      }
     },
-    alcoholismo:{
-      respuesta:{
-        type: String
+    tabaquismo: {
+      respuesta: {
+        type: String,
       },
       hace_cuanto: {
-        type: String
+        type: String,
       },
-      cuanto:{
-        type: String
-      }
+      cuanto: {
+        type: String,
+      },
     },
-    H2O:{
-      cantidad:{
-        type: String
-      }
+    alcoholismo: {
+      respuesta: {
+        type: String,
+      },
+      hace_cuanto: {
+        type: String,
+      },
+      cuanto: {
+        type: String,
+      },
     },
-    prefiere_no_consumir:{
+    H2O: {
+      cantidad: {
+        type: String,
+      },
+    },
+    prefiere_no_consumir: {
       type: String,
     },
     peso: {
@@ -117,47 +239,41 @@ let miembroSchema = new Schema({
     estatura: {
       type: String,
     },
-    LDL: {
-      type: String,
-    },
-    HDL: {
-      type: String,
-    },
     IMC: {
-      type: String
+      type: String,
     },
-    nivel_agua_corporal:{
-      type: String
+    nivel_agua_corporal: {
+      type: String,
     },
     IMM: {
-      type: String
+      type: String,
     },
     edad_biologica: {
-      type: String
+      type: String,
     },
-    peso_masa_osea:{
-      type: String
-    }
+    peso_masa_osea: {
+      type: String,
+    },
   },
-  datosPago:{
+  datosPago: {
     mensualidades: [
       {
         _id: false,
-        folio:{
-          type: String
+        folio: {
+          type: String,
         },
-        mes:{
-          type: String
+        mes: {
+          type: String,
         },
-        fecha:{
-          type: String
+        fecha: {
+          type: String,
         },
         status: {
-          type: String
-        }
-      }
-    ]
-  }
+          type: String,
+        },
+      },
+    ],
+  },
 });
 
 miembroSchema.plugin(uniqueValidator, {

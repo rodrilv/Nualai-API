@@ -182,16 +182,16 @@ app.put("/agregar-datos-medicos/:id", (req, res) => {
     }
   );
 });
-app.put("/agregar-datos-nutricionales", (req, res) => {
-  let body = req.body.datosMedicos;
+app.put("/agregar-datos-nutricionales/:id", (req, res) => {
+  let body = req.body.datosNutricionales;
   let id = req.params.id;
   console.log(body);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
       $set: {
-        "datosEntrevista.medica": "si",
-        datosMedicos: body,
+        "datosEntrevista.nutricional": "si",
+        datosNutricionales: body,
       },
     },
     {
@@ -212,8 +212,66 @@ app.put("/agregar-datos-nutricionales", (req, res) => {
     }
   );
 });
-app.put("/agregar-datos-psicologicos", (req, res) => {});
-app.put("/agregar-datos-fisioterapia", (req, res) => {});
+app.put("/agregar-datos-psicologicos/:id", (req, res) => {
+  let body = req.body.datosNutricionales;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.psicologica": "si",
+        datosPsicologicos: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
+  let body = req.body.datosFisioterapeuticos;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.fisioterapia": "si",
+        datosFisioterapeuticos: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
 
 app.patch("/pagar-mensualidades/:id", (req, res) => {
   let body = req.body;

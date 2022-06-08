@@ -49,7 +49,7 @@ app.get("/obtener-miembros", (req, res) => {
 app.get("/obtener-miembro/:id", (req, res) => {
   let id = req.params.id;
   console.log(id);
-  Miembro.findOne({ _id: id }, { datosPago: 0, datosEntrevista: 0 }).exec((err, member) => {
+  Miembro.findOne({ _id: id }, { datosPago: 0 }).exec((err, member) => {
     if (err) {
       console.log(err, "Hola soy error");
       res.status(400).json({

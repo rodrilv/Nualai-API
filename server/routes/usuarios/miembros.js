@@ -8,6 +8,8 @@ const cors = require("cors");
 const _ = require("underscore");
 const usuarios = require("../../models/usuarios");
 const Miembro = require("../../models/usuarios");
+const Receta = require("../../models/receta");
+const Consulta = require("../../models/consultas")
 const app = express();
 const nodemailer = require("nodemailer");
 const temp = require("../../models/mail-template");
@@ -22,13 +24,11 @@ const transporter = nodemailer.createTransport({
     pass: "kggkpzhzngytmprx",
   },
 });
-
 app.get("/", (req, res) => {
   return res.status(200).json({
     message: "ok, 200",
   });
 });
-
 app.get("/obtener-miembros", (req, res) => {
   Miembro.find().exec((err, members) => {
     if (err) {
@@ -45,33 +45,81 @@ app.get("/obtener-miembros", (req, res) => {
     }
   });
 });
-
+app.get("/obtener-consultas" , (req, res) =>{
+  Miembro.find({}, {datosGenerales: 1, consultas: 1}).exec((err, consultas) => {
+    console.log(consultas)
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    } else {
+      //console.log(members);
+      return res.status(200).json({
+        ok: true,
+        consultas,
+      });
+    }
+  });
+})
 app.get("/obtener-miembro/:id", (req, res) => {
   let id = req.params.id;
   console.log(id);
   Miembro.findOne({ _id: id }, { datosPago: 0 }).exec((err, member) => {
     if (err) {
       console.log(err, "Hola soy error");
-      res.status(400).json({
+      return res.status(400).json({
         ok: false,
         err,
       });
     } else {
-      console.log(member, "Hola sí entré pero no encontré nada");
-      res.status(200).json({
+      return res.status(200).json({
         ok: true,
         member,
       });
     }
   });
 });
-
+app.get("/obtener-recetas/:uid", (req, res) =>{
+  let uid = req.params.uid;
+  Receta.find({user_id: uid}).exec( (err, prescripts) =>{
+    if(err){
+      return res.status(400).json({
+        ok: false,
+        error
+      });
+    }else{
+      console.log(prescripts);
+      return res.status(200).json({
+        ok: true,
+        prescripts
+      });
+    }
+  });
+});
+app.get("/obtener-receta/:uid/:rid", (req, res) =>{
+  let uid = req.params.uid;
+  let rid = req.params.rid
+  Receta.findOne({_id: rid, user_id: uid}).exec((err, prescript) => {
+    if(err){
+      return res.status(400).json({
+        ok: false,
+        err
+      });
+    }else{
+      return res.status(200).json({
+        ok: true,
+        prescript
+      });
+    }
+  });
+});
 app.post("/registrar", (req, res) => {
   let body = req.body.miembro.datosGenerales;
   console.log(body);
   let year = new Date().getFullYear();
-  let i = "NM";
   let d = Math.random() * 999999;
+  let i = "NM";
   let id = i + parseInt(d);
   let miembro = new Miembro({
     _id: id,
@@ -151,158 +199,37 @@ app.post("/registrar", (req, res) => {
     }
   });
 });
-
-app.put("/agregar-datos-medicos/:id", (req, res) => {
-  let body = req.body.datosMedicos;
-  let id = req.params.id;
-  console.log(body);
-  usuarios.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        "datosEntrevista.medica": "si",
-        datosMedicos: body,
-      },
-    },
-    {
-      upsert: true,
-    },
-    (err, uDB) => {
-      if (err) {
-        return res.status(400).json({
-          ok: false,
-          err,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          uDB,
-        });
-      }
-    }
-  );
-});
-app.put("/agregar-datos-nutricionales/:id", (req, res) => {
-  let body = req.body.datosNutricionales;
-  let id = req.params.id;
-  console.log(body);
-  usuarios.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        "datosEntrevista.nutricional": "si",
-        datosNutricionales: body,
-      },
-    },
-    {
-      upsert: true,
-    },
-    (err, uDB) => {
-      if (err) {
-        return res.status(400).json({
-          ok: false,
-          err,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          uDB,
-        });
-      }
-    }
-  );
-});
-app.put("/agregar-datos-psicologicos/:id", (req, res) => {
-  let body = req.body.datosNutricionales;
-  let id = req.params.id;
-  console.log(body);
-  usuarios.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        "datosEntrevista.psicologica": "si",
-        datosPsicologicos: body,
-      },
-    },
-    {
-      upsert: true,
-    },
-    (err, uDB) => {
-      if (err) {
-        return res.status(400).json({
-          ok: false,
-          err,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          uDB,
-        });
-      }
-    }
-  );
-});
-app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
-  let body = req.body.datosFisioterapeuticos;
-  let id = req.params.id;
-  console.log(body);
-  usuarios.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        "datosEntrevista.fisioterapia": "si",
-        datosFisioterapeuticos: body,
-      },
-    },
-    {
-      upsert: true,
-    },
-    (err, uDB) => {
-      if (err) {
-        return res.status(400).json({
-          ok: false,
-          err,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          uDB,
-        });
-      }
-    }
-  );
-});
-
-app.patch("/pagar-mensualidades/:id", (req, res) => {
+app.post("/guardar-receta", (req, res) => {
   let body = req.body;
-  let id = req.params.id;
-  let mensualidades = body.datosPago.mensualidades;
-
-  console.log(temp);
   console.log(body);
-  console.log(mensualidades[0]);
-  usuarios.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        [`datosPago.mensualidades.$[outer].status`]: mensualidades[0].status,
-        [`datosPago.mensualidades.$[outer].fecha`]: mensualidades[0].fecha,
-      },
+  let i = "PR";
+  let d = Math.random() * 999999;
+  let id = i + parseInt(d);
+  let receta = new Receta({
+    _id: id,
+    user_id: body.receta.member_id,
+    nombre: body.receta.nombre,
+    motivo_receta: body.receta.motivo_receta,
+    receta: body.receta.receta,
+    fecha_receta:{
+      day: body.receta.fecha_receta.day,
+      month: body.receta.fecha_receta.month,
+      year: body.receta.fecha_receta.year
     },
-    {
-      arrayFilters: [{ "outer.mes": mensualidades[0].mes }],
-    },
-    (err, uDB) => {
-      if (err) {
-        res.status(400).json({
-          ok: false,
-        });
-      }
-      res.status(201).json({
+  });
+  new Receta(receta).save((err, recetaDB) => {
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    } else {
+      return res.status(200).json({
         ok: true,
+        recetaDB,
       });
     }
-  );
+  })
 });
 app.post("/enviar-recibo", cors(), (req, res) => {
   let body = req.body;
@@ -337,7 +264,157 @@ app.post("/enviar-recibo", cors(), (req, res) => {
     }
   });
 });
+app.put("/agregar-datos-medicos/:id", (req, res) => {
+  let body = req.body.datosMedicos;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.medica": "si",
+        datosMedicos: body,
+      },
+    },
+    {
+      upsert: false,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-datos-nutricionales/:id", (req, res) => {
+  let body = req.body.datosNutricionales;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.nutricional": "si",
+        datosNutricionales: body,
+      },
+    },
+    {
+      upsert: false,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-datos-psicologicos/:id", (req, res) => {
+  let body = req.body.datosPsicologicos;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.psicologica": "si",
+        datosPsicologicos: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
+  let body = req.body.datosFisioterapia;
+  let id = req.params.id;
+  console.log(body);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "datosEntrevista.fisioterapia": "si",
+        datosFisioterapia: body,
+      },
+    },
+    {
+      upsert: true,
+    },
+    (err, uDB) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          uDB,
+        });
+      }
+    }
+  );
+});
+app.patch("/pagar-mensualidades/:id", (req, res) => {
+  let body = req.body;
+  let id = req.params.id;
+  let mensualidades = body.datosPago.mensualidades;
 
+  console.log(temp);
+  console.log(body);
+  console.log(mensualidades[0]);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        [`datosPago.mensualidades.$[outer].status`]: mensualidades[0].status,
+        [`datosPago.mensualidades.$[outer].fecha`]: mensualidades[0].fecha,
+      },
+    },
+    {
+      arrayFilters: [{ "outer.mes": mensualidades[0].mes }],
+    },
+    (err, uDB) => {
+      if (err) {
+        res.status(400).json({
+          ok: false,
+        });
+      }
+      res.status(201).json({
+        ok: true,
+      });
+    }
+  );
+});
 app.delete("/eliminar-miembro/:id", (req, res) => {
   let id = req.params.id;
   usuarios.findOneAndDelete({ _id: id }, (err) => {
@@ -353,5 +430,4 @@ app.delete("/eliminar-miembro/:id", (req, res) => {
     }
   });
 });
-
 module.exports = app;

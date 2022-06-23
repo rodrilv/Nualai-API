@@ -19,10 +19,10 @@ let miembroSchema = new Schema({
     },
     edad: {
       type: Number,
-      required: [true, "Ingrese la edad para el miembro"]
+      required: [true, "Ingrese la edad para el miembro"],
     },
-    fecha_de_nacimiento:{
-      type: String
+    fecha_de_nacimiento: {
+      type: String,
     },
     genero: {
       type: String,
@@ -60,9 +60,9 @@ let miembroSchema = new Schema({
       type: String,
       required: [true, "Ingresa actividad fisica para el miembro"],
     },
-    lateralidad_manual:{
+    lateralidad_manual: {
       type: String,
-      required: [true, "Ingrese su lateralidad manual"]
+      required: [true, "Ingrese su lateralidad manual"],
     },
     grado_de_estudio: {
       type: String,
@@ -95,6 +95,14 @@ let miembroSchema = new Schema({
         tipos: {
           type: String,
         },
+      },
+      cancer: {
+        respuesta: { type: String },
+        tipo: { type: String },
+      },
+      diabetes: {
+        respuesta: { type: String },
+        tipo: { type: String },
       },
       medicamento_regular: {
         respuesta: {
@@ -172,8 +180,110 @@ let miembroSchema = new Schema({
       type: String,
     },
   },
-  //datosPsicologicos
-  //datosFisioterapeuticos
+  datosPsicologicos: {
+    atendio: { type: String },
+    antecedentes_psicologicos: {
+      anos_escuela: { type: String },
+      tiempo_curso_escuela: { type: String },
+      anos_secundaria: { type: String },
+      tiempo_curso_secundaria: { type: String },
+      problema_escolar: { type: String },
+      materias_dificultad: { type: String },
+      materias_preferidas: { type: String },
+      actividades_tiempo_libre: { type: String },
+      repitio_ano: { type: String },
+      aprende_facilmente: { type: String },
+      edad_primer_noviazgo: { type: String },
+      edad_primer_relacion: { type: String },
+      dificultades_ley: {
+        respuesta: { type: String },
+        tipo: { type: String },
+      },
+      servicio_militar: { type: String },
+      catastrofe_natural_guerras: {
+        respuesta: { type: String },
+        especifica: { type: String },
+      },
+    },
+    informacion_familiar: {
+      padre: {
+        nombre: { type: String },
+        edad: { type: String },
+        vivo_muerto: { type: String },
+        grado_de_estudio: { type: String },
+        ocupacion: { type: String },
+        relacion: { type: String },
+      },
+      madre: {
+        nombre: { type: String },
+        edad: { type: String },
+        vivo_muerto: { type: String },
+        grado_de_estudio: { type: String },
+        ocupacion: { type: String },
+        relacion: { type: String },
+      },
+      estado_civil_padres: {
+        estado_civil: { type: String },
+        motivo_separacion: { type: String },
+      },
+      hermanos: {
+        cuantos_varones: { type: String },
+        cuantos_mujeres: { type: String },
+        posicion_orden_nacimiento: { type: String },
+        nombre_hermano_mejor: { type: String },
+        motivo: { type: String },
+      },
+    },
+    situacion_economica: { type: String },
+    crianza: { type: String },
+    hijo_favorito_padres: {
+      respuesta: { type: String },
+      nombre: { type: String },
+    },
+    religion_padres: {
+      respuesta: { type: String },
+      religion: { type: String },
+    },
+    opinion_padres: { type: String },
+    antecedentes_maltrato: { type: String },
+    antecedentes_alcoholismo: { type: String },
+    casos_depresion: {
+      respuesta: { type: String },
+      cuales: { type: String },
+    },
+    observaciones: { type: String },
+  },
+  datosFisioterapia: {
+    atendio: { type: String },
+    antecedentes: {
+      HTA: { type: String },
+      cardiopatia: {
+        antecedentes: { type: String },
+        respuesta: { type: String },
+      },
+      reumatologicas: {
+        antecedentes: { type: String },
+        respuesta: { type: String },
+      },
+      transfusiones: { type: String },
+      accidentes: { type: String },
+      fracturas_lesiones: { type: String },
+      temperatura_corporal: { type: String },
+      fc: { type: String },
+      fr: { type: String },
+    },
+    escala_dolor: {
+      respuesta: { type: String },
+      donde: { type: String },
+      escala: { type: String },
+    },
+    marcha_deambulacion: { type: String },
+    exploracion_fuerza_muscular: { type: String },
+    medicion_perimetros: { type: String },
+    exploracion_rangos_movimiento: { type: String },
+    objetivos_trabajar: { type: String },
+    plan_tratamiento: { type: String },
+  },
   datosNutricionales: {
     atendio: {
       type: String,

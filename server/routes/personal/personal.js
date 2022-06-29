@@ -12,13 +12,11 @@ const app = express();
 //const nodemailer = require("nodemailer");
 //const temp = require("../../models/mail-template");
 require("../../config/helmet")(app);
-
 app.get("/", (req, res) => {
   return res.status(200).json({
     message: "ok, 200",
   });
 });
-
 app.get("/obtener-personal", (req, res) => {
   Personal.find().exec((err, personal) => {
     if (err) {
@@ -34,7 +32,6 @@ app.get("/obtener-personal", (req, res) => {
     }
   });
 });
-
 app.post("/registrar-personal", (req, res) => {
   let body = req.body;
   console.log(body);
@@ -69,7 +66,6 @@ app.post("/registrar-personal", (req, res) => {
     }
   });
 });
-
 app.delete("/eliminar-personal/:id", (req, res) => {
   let id = req.params.id;
   personal.findOneAndDelete({ _id: id }, (err) => {

@@ -139,6 +139,11 @@ let miembroSchema = new Schema({
         },
       },
     },
+    signos_vitales:{
+      fc:{type: Number},
+      fr:{type: Number},
+      temperatura_corporal:{type: Number}
+    },
     presion_arterial: {
       sistolica: {
         type: Number,
@@ -364,6 +369,7 @@ let miembroSchema = new Schema({
     peso_masa_osea: {
       type: String,
     },
+    plan_alimentacion:{ type: String }
   },
   datosPago: {
     mensualidades: [

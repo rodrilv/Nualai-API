@@ -9,7 +9,7 @@ const _ = require("underscore");
 const usuarios = require("../../models/usuarios");
 const Miembro = require("../../models/usuarios");
 const Receta = require("../../models/receta");
-const Consulta = require("../../models/consultas")
+const Consulta = require("../../models/consultas");
 const app = express();
 const nodemailer = require("nodemailer");
 const temp = require("../../models/mail-template");
@@ -20,8 +20,8 @@ const transporter = nodemailer.createTransport({
   secure: true,
   port: 465,
   auth: {
-    user: "rott.9954@gmail.com",
-    pass: "kggkpzhzngytmprx",
+    user: "nualai.clinica@gmail.com",
+    pass: "nqesjdujfmurjcmd",
   },
 });
 app.get("/", (req, res) => {
@@ -45,23 +45,40 @@ app.get("/obtener-miembros", (req, res) => {
     }
   });
 });
-app.get("/obtener-consultas" , (req, res) =>{
-  Miembro.find({}, {datosGenerales: 1, consultas: 1}).exec((err, consultas) => {
-    console.log(consultas)
-    if (err) {
+app.get("/obtener-consultas", (req, res) => {
+  Consulta.find({}, {}).exec(
+    (err, consultas) => {
+      console.log(consultas);
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          consultas,
+        });
+      }
+    }
+  );
+});
+app.get("/obtener-consultas-miembro/:uid", (req, res) =>{
+  let uid = req.params.uid;
+  Consulta.find({ "general.user_id": uid }).exec( (err, consultas) =>{
+    if(err){
       return res.status(400).json({
         ok: false,
-        err,
+        err
       });
-    } else {
-      //console.log(members);
+    }else{
       return res.status(200).json({
         ok: true,
-        consultas,
+        consultas
       });
     }
   });
-})
+});
 app.get("/obtener-miembro/:id", (req, res) => {
   let id = req.params.id;
   console.log(id);
@@ -80,27 +97,51 @@ app.get("/obtener-miembro/:id", (req, res) => {
     }
   });
 });
-app.get("/obtener-recetas/:uid", (req, res) =>{
+app.get("/obtener-recetas/:uid", (req, res) => {
   let uid = req.params.uid;
-  Receta.find({user_id: uid}).exec( (err, prescripts) =>{
-    if(err){
+  Receta.find({ user_id: uid }).exec((err, prescripts) => {
+    if (err) {
       return res.status(400).json({
         ok: false,
-        error
+        error,
       });
-    }else{
+    } else {
       console.log(prescripts);
       return res.status(200).json({
         ok: true,
-        prescripts
+        prescripts,
       });
     }
   });
 });
-app.get("/obtener-receta/:uid/:rid", (req, res) =>{
+app.get("/obtener-receta/:uid/:rid", (req, res) => {
   let uid = req.params.uid;
-  let rid = req.params.rid
-  Receta.findOne({_id: rid, user_id: uid}).exec((err, prescript) => {
+  let rid = req.params.rid;
+  Receta.findOne({ _id: rid, user_id: uid }).exec((err, prescript) => {
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        prescript,
+      });
+    }
+  });
+});
+app.post("/crear-consulta", (req, res) => {
+  let d = Math.random() * 999999;
+  let i = "CS";
+  let id = i + parseInt(d);
+  let body = req.body.consulta.general;
+  console.log(body);
+  let consulta = new Consulta({
+    _id: id,
+    general: body
+  });
+  new Consulta(consulta).save( (err, consDB) => {
     if(err){
       return res.status(400).json({
         ok: false,
@@ -109,7 +150,7 @@ app.get("/obtener-receta/:uid/:rid", (req, res) =>{
     }else{
       return res.status(200).json({
         ok: true,
-        prescript
+        consDB
       });
     }
   });
@@ -181,6 +222,42 @@ app.post("/registrar", (req, res) => {
           fecha: year,
           status: "PENDIENTE",
         },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "7° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "8° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "9° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "10° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "11° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
+        {
+          folio: `P0${parseInt(Math.random() * 999999)}`,
+          mes: "12° Mes",
+          fecha: year,
+          status: "PENDIENTE",
+        },
       ],
     },
   });
@@ -211,10 +288,10 @@ app.post("/guardar-receta", (req, res) => {
     nombre: body.receta.nombre,
     motivo_receta: body.receta.motivo_receta,
     receta: body.receta.receta,
-    fecha_receta:{
+    fecha_receta: {
       day: body.receta.fecha_receta.day,
       month: body.receta.fecha_receta.month,
-      year: body.receta.fecha_receta.year
+      year: body.receta.fecha_receta.year,
     },
   });
   new Receta(receta).save((err, recetaDB) => {
@@ -229,7 +306,7 @@ app.post("/guardar-receta", (req, res) => {
         recetaDB,
       });
     }
-  })
+  });
 });
 app.post("/enviar-recibo", cors(), (req, res) => {
   let body = req.body;
@@ -379,6 +456,29 @@ app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
         return res.status(200).json({
           ok: true,
           uDB,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-plan-alimentacion/:id", (req, res) => {
+  let body = req.body.plan_alimentacion;
+  let id = req.params.id;
+  console.log(body, id);
+  usuarios.findOneAndUpdate(
+    { _id: id },
+    { $set: { "datosNutricionales.plan_alimentacion": body } },
+    { upsert: true },
+    (err, plan) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          plan
         });
       }
     }

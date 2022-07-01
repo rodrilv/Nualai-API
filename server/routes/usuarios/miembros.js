@@ -46,35 +46,49 @@ app.get("/obtener-miembros", (req, res) => {
   });
 });
 app.get("/obtener-consultas", (req, res) => {
-  Consulta.find({}, {}).exec(
-    (err, consultas) => {
-      console.log(consultas);
-      if (err) {
-        return res.status(400).json({
-          ok: false,
-          err,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          consultas,
-        });
-      }
-    }
-  );
-});
-app.get("/obtener-consultas-miembro/:uid", (req, res) =>{
-  let uid = req.params.uid;
-  Consulta.find({ "general.user_id": uid }).exec( (err, consultas) =>{
-    if(err){
+  Consulta.find({}, {}).exec((err, consultas) => {
+    console.log(consultas);
+    if (err) {
       return res.status(400).json({
         ok: false,
-        err
+        err,
       });
-    }else{
+    } else {
       return res.status(200).json({
         ok: true,
-        consultas
+        consultas,
+      });
+    }
+  });
+});
+app.get("/obtener-consultas-miembro/:uid", (req, res) => {
+  let uid = req.params.uid;
+  Consulta.find({ "general.user_id": uid }).exec((err, consultas) => {
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        consultas,
+      });
+    }
+  });
+});
+app.get("/obtener-consulta-miembro/:cid", (req, res) => {
+  let id = req.params.cid;
+  Consulta.findOne({ _id: id }).exec((err, consulta) => {
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        consulta,
       });
     }
   });
@@ -139,18 +153,27 @@ app.post("/crear-consulta", (req, res) => {
   console.log(body);
   let consulta = new Consulta({
     _id: id,
-    general: body
+    general: body,
+    valoracion_medica: {
+      status: "Pendiente",
+    },
+    valoracion_nutricional: {
+      status: "Pendiente",
+    },
+    valoracion_fisioterapia: {
+      status: "Pendiente",
+    },
   });
-  new Consulta(consulta).save( (err, consDB) => {
-    if(err){
+  new Consulta(consulta).save((err, consDB) => {
+    if (err) {
       return res.status(400).json({
         ok: false,
-        err
+        err,
       });
-    }else{
+    } else {
       return res.status(200).json({
         ok: true,
-        consDB
+        consDB,
       });
     }
   });
@@ -478,7 +501,76 @@ app.put("/agregar-plan-alimentacion/:id", (req, res) => {
       } else {
         return res.status(200).json({
           ok: true,
-          plan
+          plan,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-consulta-medica/:cid", (req, res) => {
+  let id = req.params.cid;
+  let body = req.body;
+  console.log(body);
+  Consulta.findOneAndUpdate(
+    { _id: id },
+    { $set: { valoracion_medica: body.valoracion_medica } },
+    { upsert: true },
+    (err, consultaMedica) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          consultaMedica,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-consulta-nutricional/:cid", (req, res) => {
+  let id = req.params.cid;
+  let body = req.body;
+  console.log(body);
+  Consulta.findOneAndUpdate(
+    { _id: id },
+    { $set: { valoracion_nutricional: body.valoracion_nutricional } },
+    { upsert: true },
+    (err, consultaNutricional) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          consultaNutricional,
+        });
+      }
+    }
+  );
+});
+app.put("/agregar-consulta-fisioterapia/:cid", (req, res) => {
+  let id = req.params.cid;
+  let body = req.body;
+  console.log(body);
+  Consulta.findOneAndUpdate(
+    { _id: id },
+    { $set: { valoracion_fisioterapia: body.valoracion_fisioterapia } },
+    { upsert: true },
+    (err, consultaFisio) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          consultaFisio,
         });
       }
     }

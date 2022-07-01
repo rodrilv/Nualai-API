@@ -16,6 +16,7 @@ let consultaSchema = new Schema({
     },
   },
   valoracion_medica: {
+    status:{type: String},
     presion_arterial: {
       sistolica: { type: Number },
       distolica: { type: Number },
@@ -36,15 +37,12 @@ let consultaSchema = new Schema({
     },
   },
   valoracion_nutricional: {
-    fecha: {
-      day: { type: Number },
-      month: { type: Number },
-      year: { type: Number },
-    },
+    status:{type: String},
     peso: { type: String },
     estatura: { type: String },
     IMC: { type: String },
     nivel_agua_corporal: { type: String },
+    rango: {type: String},
     IMM: { type: String },
     edad_biologica: { type: String },
     peso_masa_osea: { type: String },
@@ -55,9 +53,10 @@ let consultaSchema = new Schema({
     kg_grasa: { type: String },
     kcal_dta: { type: String },
     macronutrientes: { type: String },
+    plan_alimentacion: { type: String }
   },
   valoracion_fisioterapia: {
-    f_cardiaca: { type: Number },
+    status:{type: String},
     subjetivo: { type: String },
     objetivo: { type: String },
     analisis: { type: String },

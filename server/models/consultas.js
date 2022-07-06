@@ -8,12 +8,14 @@ let consultaSchema = new Schema({
   general: {
     nombre: { type: String },
     user_id: { type: String },
+    hora: {type: String},
     sesion: { type: String },
     fecha_consulta: {
       day: { type: Number },
       month: { type: Number },
       year: { type: Number },
     },
+    plan_alimentacion:{type: String},
   },
   valoracion_medica: {
     status:{type: String},
@@ -53,7 +55,7 @@ let consultaSchema = new Schema({
     kg_grasa: { type: String },
     kcal_dta: { type: String },
     macronutrientes: { type: String },
-    plan_alimentacion: { type: String }
+    plan_alimentacion: {type: String}
   },
   valoracion_fisioterapia: {
     status:{type: String},

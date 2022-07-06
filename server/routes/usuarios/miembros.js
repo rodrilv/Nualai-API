@@ -145,8 +145,24 @@ app.get("/obtener-receta/:uid/:rid", (req, res) => {
     }
   });
 });
+app.get("/obtener-ultima-consulta/:id", (req, res) =>{
+  let id = req.params.id;
+  Consulta.find({ $and: [ {"general.sesion": { $ne: "Entrevista"} }, { "general.user_id": id }] }, { "general.sesion":1 }).sort( {"general.sesion": -1 } ).limit(1).exec( (err, data) => {
+    if(err){
+      return res.status(400).json({
+        ok: false
+      });
+    }else{
+      console.log("Here is data"+data)
+      return res.status(200).json({
+        ok: true,
+        data
+      });
+    }
+  })
+})
 app.post("/crear-consulta", (req, res) => {
-  let d = Math.random() * 999999;
+  let d = Math.random() * 999999999;
   let i = "CS";
   let id = i + parseInt(d);
   let body = req.body.consulta.general;
@@ -507,6 +523,26 @@ app.put("/agregar-plan-alimentacion/:id", (req, res) => {
     }
   );
 });
+app.put("/agregar-plan-alimentacion-consulta/:id", (req,res) => {
+  let body = req.body.plan_alimentacion;
+  let id = req.params.id;
+  console.log(body);
+  Consulta.findOneAndUpdate(
+    {_id: id }, 
+    { $set: { "valoracion_nutricional.plan_alimentacion":body } }, 
+    { upsert: true },
+    (err, update) => {
+      if(err){
+        return res.status(400).json({
+          ok: false
+        });
+      }else{
+        return res.status(200).json({
+          ok: true
+        })
+      }
+    })
+});
 app.put("/agregar-consulta-medica/:cid", (req, res) => {
   let id = req.params.cid;
   let body = req.body;
@@ -606,6 +642,35 @@ app.patch("/pagar-mensualidades/:id", (req, res) => {
       });
     }
   );
+});
+app.patch("/actualizar-consulta/:id", (req, res) => {
+  let body = req.body;
+  let id = req.params.id;
+  Consulta.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        "general.fecha_consulta.day": body.fecha[2],
+        "general.fecha_consulta.month": body.fecha[1],
+        "general.fecha_consulta.year": body.fecha[0],
+        "general.hora":body.hora
+      },
+    },
+    {upsert: false},
+    (err, updDB) => {
+      if(err){
+        return res.status(400).json({
+          ok: false,
+          err
+        })
+      }else{
+        return res.status(200).json({
+          ok: true
+        });
+      }
+    }
+  );
+  console.log(body);
 });
 app.delete("/eliminar-miembro/:id", (req, res) => {
   let id = req.params.id;

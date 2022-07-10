@@ -34,7 +34,6 @@ app.get("/obtener-personal", (req, res) => {
 });
 app.post("/registrar-personal", (req, res) => {
   let body = req.body;
-  console.log(body);
   let i = "NP";
   let d = Math.random() * 999999;
   let id = i + parseInt(d);

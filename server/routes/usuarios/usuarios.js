@@ -56,7 +56,6 @@ app.get('/obtener/:id/:pass', (req, res) => {
         }
     });
 });
-
 app.post('/registrar', (req, res) => {
 
     let usuario = new Usuario({
@@ -67,10 +66,8 @@ app.post('/registrar', (req, res) => {
         Genero: req.body.Genero,
         Pass: bcrypt.hashSync(req.body.Pass)
     });
-    console.log(usuario);
     new Usuario(usuario).save((err, userDB) => {
         if (err) {
-            console.log("Algo falló en el envío...");
             return res.status(400).json({
                 ok: false,
                 err

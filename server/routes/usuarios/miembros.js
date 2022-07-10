@@ -37,7 +37,6 @@ app.get("/obtener-miembros", (req, res) => {
         err,
       });
     } else {
-      //console.log(members);
       return res.status(200).json({
         ok: true,
         members,
@@ -47,7 +46,6 @@ app.get("/obtener-miembros", (req, res) => {
 });
 app.get("/obtener-consultas", (req, res) => {
   Consulta.find({}, {}).exec((err, consultas) => {
-    console.log(consultas);
     if (err) {
       return res.status(400).json({
         ok: false,
@@ -95,10 +93,8 @@ app.get("/obtener-consulta-miembro/:cid", (req, res) => {
 });
 app.get("/obtener-miembro/:id", (req, res) => {
   let id = req.params.id;
-  console.log(id);
   Miembro.findOne({ _id: id }, { datosPago: 0 }).exec((err, member) => {
     if (err) {
-      console.log(err, "Hola soy error");
       return res.status(400).json({
         ok: false,
         err,
@@ -120,7 +116,6 @@ app.get("/obtener-recetas/:uid", (req, res) => {
         error,
       });
     } else {
-      console.log(prescripts);
       return res.status(200).json({
         ok: true,
         prescripts,
@@ -164,7 +159,6 @@ app.get("/obtener-ultima-consulta/:id", (req, res) => {
           ok: false,
         });
       } else {
-        console.log("Here is data" + data);
         return res.status(200).json({
           ok: true,
           data,
@@ -177,7 +171,6 @@ app.post("/crear-consulta", (req, res) => {
   let i = "CS";
   let id = i + parseInt(d);
   let body = req.body.consulta.general;
-  console.log(body);
   let consulta = new Consulta({
     _id: id,
     general: body,
@@ -207,7 +200,6 @@ app.post("/crear-consulta", (req, res) => {
 });
 app.post("/registrar", (req, res) => {
   let body = req.body.miembro.datosGenerales;
-  console.log(body);
   let year = new Date().getFullYear();
   let d = Math.random() * 999999;
   let i = "NM";
@@ -311,7 +303,6 @@ app.post("/registrar", (req, res) => {
       ],
     },
   });
-  console.log(miembro);
   new Miembro(miembro).save((err, memDB) => {
     if (err) {
       return res.status(400).json({
@@ -328,7 +319,6 @@ app.post("/registrar", (req, res) => {
 });
 app.post("/guardar-receta", (req, res) => {
   let body = req.body;
-  console.log(body);
   let i = "PR";
   let d = Math.random() * 999999;
   let id = i + parseInt(d);
@@ -394,7 +384,6 @@ app.post("/enviar-recibo", cors(), (req, res) => {
 app.put("/agregar-datos-medicos/:id", (req, res) => {
   let body = req.body.datosMedicos;
   let id = req.params.id;
-  console.log(body);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
@@ -424,7 +413,6 @@ app.put("/agregar-datos-medicos/:id", (req, res) => {
 app.put("/agregar-datos-nutricionales/:id", (req, res) => {
   let body = req.body.datosNutricionales;
   let id = req.params.id;
-  console.log(body);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
@@ -454,7 +442,6 @@ app.put("/agregar-datos-nutricionales/:id", (req, res) => {
 app.put("/agregar-datos-psicologicos/:id", (req, res) => {
   let body = req.body.datosPsicologicos;
   let id = req.params.id;
-  console.log(body);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
@@ -484,7 +471,6 @@ app.put("/agregar-datos-psicologicos/:id", (req, res) => {
 app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
   let body = req.body.datosFisioterapia;
   let id = req.params.id;
-  console.log(body);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
@@ -514,7 +500,6 @@ app.put("/agregar-datos-fisioterapia/:id", (req, res) => {
 app.put("/agregar-plan-alimentacion/:id", (req, res) => {
   let body = req.body.plan_alimentacion;
   let id = req.params.id;
-  console.log(body, id);
   usuarios.findOneAndUpdate(
     { _id: id },
     { $set: { "datosNutricionales.plan_alimentacion": body } },
@@ -537,7 +522,6 @@ app.put("/agregar-plan-alimentacion/:id", (req, res) => {
 app.put("/agregar-plan-alimentacion-consulta/:id", (req, res) => {
   let body = req.body.plan_alimentacion;
   let id = req.params.id;
-  console.log(body);
   Consulta.findOneAndUpdate(
     { _id: id },
     { $set: { "valoracion_nutricional.plan_alimentacion": body } },
@@ -558,7 +542,6 @@ app.put("/agregar-plan-alimentacion-consulta/:id", (req, res) => {
 app.put("/agregar-consulta-medica/:cid", (req, res) => {
   let id = req.params.cid;
   let body = req.body;
-  console.log(body);
   Consulta.findOneAndUpdate(
     { _id: id },
     { $set: { valoracion_medica: body.valoracion_medica } },
@@ -581,7 +564,6 @@ app.put("/agregar-consulta-medica/:cid", (req, res) => {
 app.put("/agregar-consulta-nutricional/:cid", (req, res) => {
   let id = req.params.cid;
   let body = req.body;
-  console.log(body);
   Consulta.findOneAndUpdate(
     { _id: id },
     { $set: { valoracion_nutricional: body.valoracion_nutricional } },
@@ -604,7 +586,6 @@ app.put("/agregar-consulta-nutricional/:cid", (req, res) => {
 app.put("/agregar-consulta-fisioterapia/:cid", (req, res) => {
   let id = req.params.cid;
   let body = req.body;
-  console.log(body);
   Consulta.findOneAndUpdate(
     { _id: id },
     { $set: { valoracion_fisioterapia: body.valoracion_fisioterapia } },
@@ -628,10 +609,6 @@ app.patch("/pagar-mensualidades/:id", (req, res) => {
   let body = req.body;
   let id = req.params.id;
   let mensualidades = body.datosPago.mensualidades;
-
-  console.log(temp);
-  console.log(body);
-  console.log(mensualidades[0]);
   usuarios.findOneAndUpdate(
     { _id: id },
     {
@@ -682,7 +659,6 @@ app.patch("/actualizar-consulta/:id", (req, res) => {
       }
     }
   );
-  console.log(body);
 });
 app.delete("/eliminar-miembro/:id", (req, res) => {
   let id = req.params.id;

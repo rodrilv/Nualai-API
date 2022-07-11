@@ -361,7 +361,7 @@ app.post("/enviar-recibo", cors(), (req, res) => {
     total: body.total,
   };
   let mailOptions = {
-    from: "rott.9954@gmail.com",
+    from: "Nualai Clinica",
     to: `${mensualidades[0].correo}`,
     subject: "Recibo de Pago",
     text: "Hola Mundo",
@@ -377,6 +377,39 @@ app.post("/enviar-recibo", cors(), (req, res) => {
       res.status(200).json({
         ok: true,
         info,
+      });
+    }
+  });
+});
+app.post("/enviar-recordatorio/:correo", cors(), (req, res) => {
+  let correo = req.params.correo;
+  let body = req.body;
+  let uid = body.user_id;
+  let name = body.nombre;
+  let cita =
+    body.fecha_consulta.day +
+    "/" +
+    body.fecha_consulta.month +
+    "/" +
+    body.fecha_consulta.year +
+    " a las " +
+    body.hora +
+    " horas.";
+  let mailOptions = {
+    from: "Nualai Clinica",
+    to: `${correo}`,
+    subject: "RECORDATORIO DE CONSULTA",
+    text: `Por este medio, ${name} con matrícula ${uid}, le recordamos que usted tiene una cita programada para el ${cita}. \n Le agradeceríamos que nos pudiera confirmar su asistencia, de modo contrario poder comunicarse con nosotros para reagendar su cita. \n Saludos cordiales. \n \n Equipo Nualai.`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(401).json({
+        ok: false,
+        error: `Unable to send email`,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
       });
     }
   });

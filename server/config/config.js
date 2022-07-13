@@ -1,3 +1,4 @@
+require('dotenv').config();
 process.env.PORT = process.env.PORT || 3000;
 //Entorno de desarrollo 
 process.env.NODE_ENV = process.env.NODE_ENV || 'prod';
@@ -7,8 +8,10 @@ process.env.SEED = process.env.SEED || 'firma-super-secreta';
 
 let urlDB;
 if (process.env.NODE_ENV === 'dev') {
-    urlDB = 'mongodb://localhost:27017/usuarios';
-} else {
-    urlDB ="mongodb+srv://root:root@cluster0.ljf5e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+    urlDB = `${process.env.DEV_DB}`;
+} else if(process.env.NODE_ENV === 'cloud') {
+    urlDB =`${process.env.CLOUD_DB}`;
+} else if(process.env.NODE_ENV === 'prod'){
+    urlDB = `${process.env.PROD_DB}`;
 }
 process.env.URLDB = urlDB;

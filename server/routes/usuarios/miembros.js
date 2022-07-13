@@ -1,4 +1,5 @@
 require("../../config/config");
+require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
 //const bcrypt = require('bcryptjs');
@@ -16,12 +17,12 @@ const temp = require("../../models/mail-template");
 require("../../config/helmet")(app);
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: `${process.env.HOST}`,
   secure: true,
-  port: 465,
+  port: process.env.SMTP_PORT,
   auth: {
-    user: "nualai.clinica@gmail.com",
-    pass: "nqesjdujfmurjcmd",
+    user: `${process.env.USER}`,
+    pass: `${process.env.PASS}`,
   },
 });
 app.get("/", (req, res) => {
@@ -369,6 +370,7 @@ app.post("/enviar-recibo", cors(), (req, res) => {
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
+      console.log(process.env.SMTP_PORT, process.env.USER, process.env.PASS);
       res.status(400).json({
         ok: false,
         message: "I ran but i failed",
